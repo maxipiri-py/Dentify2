@@ -1,13 +1,13 @@
-package com.dentify.autentificador;
+package com.dentify.pagos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AutentificadorApplication {
+public class PagosApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AutentificadorApplication.class, args);
+		SpringApplication.run(PagosApplication.class, args);
 	}
 
 }

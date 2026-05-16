@@ -1,10 +1,10 @@
-package com.dentify.autentificador;
+package com.dentify.pagos;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AutentificadorApplicationTests {
+class PagosApplicationTests {
 
 	@Test
 	void contextLoads() {
