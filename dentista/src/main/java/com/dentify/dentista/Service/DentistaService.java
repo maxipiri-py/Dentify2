@@ -1,5 +1,6 @@
 package com.dentify.dentista.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class DentistaService {
     @Autowired
     private DentistaRepository dentistaRepository;
 
-    public void Crear(DentistaDTO dentistaDTO) {
+    public Dentista crear(DentistaDTO dentistaDTO) {
         Dentista dentista = new Dentista();
         dentista.setRut(dentistaDTO.getRut());
         dentista.setNombre(dentistaDTO.getNombre());
@@ -23,10 +24,19 @@ public class DentistaService {
         dentista.setEspecialidad(dentistaDTO.getEspecialidad());
         dentista.setCorreo(dentistaDTO.getCorreo());
         dentista.setTelefono(dentistaDTO.getTelefono());
-        dentistaRepository.save(dentista);
+        Dentista dentistaSave=dentistaRepository.save(dentista);
+        return dentistaSave;
     }
 
     public Optional<Dentista> buscarPorId(Integer id) {
         return dentistaRepository.findById(id);
+    }
+
+    public List<Dentista> listarTodos() {
+        return dentistaRepository.findAll();
+    }
+    
+    public List<Dentista> buscarTodos(){
+        return dentistaRepository.findAll();
     }
 }
