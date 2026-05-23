@@ -44,7 +44,6 @@ public class AgendaController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                     .body("No existe el tipo de usuario con ID:"+id);
             }
-            Optional<AgendaDTO> agenda;
             return ResponseEntity.ok(agenda.get());
     }
 }
