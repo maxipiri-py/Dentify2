@@ -1,10 +1,10 @@
-create table dentista (
-        id integer not null auto_increment,
-        rut varchar(12) not null,
-        nombre varchar(255) not null,
-        apellido varchar(255) not null,
-        especialidad varchar(255) not null,
-        correo varchar(255),
-        telefono varchar(20),
-        primary key (id)
-    ) 
+CREATE TABLE dentista (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    rut VARCHAR(13) NOT NULL UNIQUE,
+    nombre VARCHAR(255),
+    apellido VARCHAR(255),
+    especialidad VARCHAR(255),
+    correo VARCHAR(255),
+    telefono VARCHAR(50),
+    PRIMARY KEY (id)
+);

@@ -1,9 +1,10 @@
-  create table paciente (
-        id integer not null auto_increment,
-        fecha_nacimiento datetime(6),
-        rut varchar(13) not null,
-        apellido varchar(255),
-        correo varchar(255),
-        nombre varchar(255),
-        primary key (id)
-    ) 
+CREATE TABLE pago (
+    id INTEGER NOT NULL AUTO_INCREMENT,
+    paciente_id INTEGER,
+    nombre_paciente VARCHAR(255),
+    rut_paciente VARCHAR(13),
+    presupuesto_id INTEGER,
+    metodo_pago VARCHAR(100),
+    estado_pago VARCHAR(100),
+    PRIMARY KEY (id)
+);
