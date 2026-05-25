@@ -16,7 +16,7 @@ public class WebConfig {
     }
 
     @Bean
-    public WebClient webClientMedicos(WebClient.Builder builder) {
-        return builder.baseUrl("http://localhost:8082/api").build(); // Puerto del Micro de Médicos
+    public WebClient webClientDentistas(WebClient.Builder builder) {
+        return builder.baseUrl("http://localhost:8082/api").build(); // Puerto del Micro de dentistas
     }
 }
