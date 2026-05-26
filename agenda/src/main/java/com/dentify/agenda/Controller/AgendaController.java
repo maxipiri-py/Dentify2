@@ -37,7 +37,7 @@ public class AgendaController {
         return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable int id){
         Optional<AgendaDTO> agenda = agendaService.buscarPorId(id);
             if(agenda.isEmpty()){
