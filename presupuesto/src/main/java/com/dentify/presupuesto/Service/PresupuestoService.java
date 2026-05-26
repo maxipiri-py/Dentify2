@@ -23,11 +23,15 @@ public class PresupuestoService {
     }
 
    public List<PresupuestoModel> buscarPorEstado(String estado) {
-        return presupuestoRepository.findByEstado(estado);
+        return presupuestoRepository.findByEstadoPago(estado);
     }
 
    public Boolean guardarPresupuesto(PresupuestoModel presupuesto) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'guardarPresupuesto'");
+        try {
+            presupuestoRepository.save(presupuesto);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
    }
 }

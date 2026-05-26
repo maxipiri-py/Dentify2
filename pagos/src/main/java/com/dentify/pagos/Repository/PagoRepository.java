@@ -12,7 +12,7 @@ public interface PagoRepository extends JpaRepository<PagoModel, Integer> {
  
     List<PagoModel> findByPacienteId(Integer pacienteId);
  
-    List<PagoModel> findByEstado(String estado);
+    List<PagoModel> findByEstadoPago(String estadoPago);
  
     List<PagoModel> findByPresupuestoId(Integer presupuestoId);
 }

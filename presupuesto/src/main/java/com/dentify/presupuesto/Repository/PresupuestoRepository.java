@@ -12,6 +12,6 @@ public interface PresupuestoRepository extends JpaRepository<PresupuestoModel, I
  
     List<PresupuestoModel> findByPacienteId(Integer pacienteId);
  
-    List<PresupuestoModel> findByEstado(String estado);
+    List<PresupuestoModel> findByEstadoPago(String estadoPago);
 }
  

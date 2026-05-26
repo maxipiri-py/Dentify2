@@ -39,7 +39,7 @@ public class AgendaController {
 
     @GetMapping("{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable int id){
-        Optional<AgendaDTO> agenda = AgendaService.buscarPorId(id);
+        Optional<AgendaDTO> agenda = agendaService.buscarPorId(id);
             if(agenda.isEmpty()){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                     .body("No existe el tipo de usuario con ID:"+id);

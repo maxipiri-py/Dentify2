@@ -1,9 +1,10 @@
-  create table agenda (
-        id integer not null auto_increment,
-        fecha_nacimiento datetime(6),
-        rut varchar(13) not null,
-        apellido varchar(255),
-        correo varchar(255),
-        nombre varchar(255),
-        primary key (id)
-    ) 
+create table agenda (
+    id integer not null auto_increment,
+    nombre varchar(255),
+    apellido varchar(255),
+    rut varchar(13),
+    especialidad varchar(255),
+    telefono varchar(255),
+    email varchar(255),
+    primary key (id)
+);

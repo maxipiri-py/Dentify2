@@ -33,7 +33,7 @@ public class PagoService {
     }
  
     public List<PagoModel> buscarPorEstado(String estado) {
-        return pagoRepository.findByEstado(estado);
+        return pagoRepository.findByEstadoPago(estado);
     }
  
     public List<PagoModel> buscarPorPresupuesto(Integer presupuestoId) {
@@ -41,10 +41,21 @@ public class PagoService {
     }
 
     public Boolean registrarPago(PagoDTO pago) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'registrarPago'");
+        if (pago == null) {
+            return false;
+        }
+
+        PagoModel pagoModel = new PagoModel();
+        pagoModel.setPacienteId(pago.getPacienteId());
+        pagoModel.setNombrePaciente(pago.getNombrePaciente());
+        pagoModel.setRutPaciente(pago.getRutPaciente());
+        pagoModel.setPresupuestoId(pago.getPresupuestoId());
+        pagoModel.setMetodoPago(pago.getMetodoPago());
+        pagoModel.setEstadoPago(pago.getEstadoPago());
+
+        pagoRepository.save(pagoModel);
+        return true;
     }
  
-   
 }
  

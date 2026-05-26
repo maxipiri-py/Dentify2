@@ -1,13 +1,11 @@
 package com.dentify.pagos.Controller;
   
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +23,8 @@ public class PagoController {
     @Autowired
     private PagoService pagoService;
  
-    @PostMapping("/registrarPago")
+    // CORRECCIÓN: Quitamos el "/registrarPago" para seguir el estándar REST
+    @PostMapping 
     public ResponseEntity<String> registrarPago(@RequestBody PagoDTO pago) {
         Boolean registrado = pagoService.registrarPago(pago);
         if (!registrado) {
@@ -34,12 +33,13 @@ public class PagoController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body("Pago registrado correctamente.");
     }
-       @GetMapping("/lista-pagos")
+    
+    @GetMapping("/lista-pagos")
     public ResponseEntity<List<PagoModel>> listarTodos() {
         return ResponseEntity.ok(pagoService.buscarTodos());
     }
 
-   @GetMapping("/estado-pago")
+    @GetMapping("/estado-pago")
     public ResponseEntity<List<PagoModel>> buscarPorEstado(@RequestParam String estado) {
         return ResponseEntity.ok(pagoService.buscarPorEstado(estado));
     }

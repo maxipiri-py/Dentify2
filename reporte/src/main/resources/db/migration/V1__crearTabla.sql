@@ -1,9 +1,10 @@
-  create table paciente (
-        id integer not null auto_increment,
-        fecha_nacimiento datetime(6),
-        rut varchar(13) not null,
-        apellido varchar(255),
-        correo varchar(255),
-        nombre varchar(255),
-        primary key (id)
-    ) 
+create table reporte (
+    id integer not null auto_increment,
+    tipo_reporte varchar(255),
+    descripcion text,
+    fecha_generacion date,
+    total_pacientes integer,
+    total_citas integer,
+    total_ingresos double,
+    primary key (id)
+);
