@@ -23,7 +23,7 @@ public class ReporteService {
         return reporteRepository.findAll();
     }
 
-    public Boolean generarReporte(ReporteDTO dto) {
+    public Boolean generarReporte1(ReporteDTO dto) {
         try {
             ReporteModel model = convertToModel(dto);
             reporteRepository.save(model);
@@ -37,6 +37,22 @@ public class ReporteService {
         return reporteRepository.findById(id)
                 .map(this::convertToDTO);
     }
+
+    // ... (imports) ...
+
+    public Boolean generarReporte(ReporteDTO dto) {
+        try {
+            ReporteModel model = convertToModel(dto);
+            reporteRepository.save(model);
+            return true;
+        } catch (Exception e) {
+            // ¡Imprimimos el error real en la consola!
+            e.printStackTrace(); 
+            return false;
+        }
+    }
+
+// ... (resto del código) ...
 
     private ReporteModel convertToModel(ReporteDTO dto) {
         if (dto == null) return null;

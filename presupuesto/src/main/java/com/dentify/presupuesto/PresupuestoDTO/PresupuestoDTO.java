@@ -1,14 +1,19 @@
 package com.dentify.presupuesto.PresupuestoDTO;
 
 import java.time.LocalDate;
- 
+
 import lombok.Data;
- 
+
 @Data
 public class PresupuestoDTO {
- 
+
     private Integer id;
+
+    // Regla de negocio: obligatorios
     private Integer pacienteId;
+    private Integer dentistaId;
+    private Integer prestacionId;
+
     private String nombrePaciente;
     private String rutPaciente;
     private String tratamiento;
@@ -17,4 +22,3 @@ public class PresupuestoDTO {
     private LocalDate fechaEmision;
     private String estadoPago;
 }
- 

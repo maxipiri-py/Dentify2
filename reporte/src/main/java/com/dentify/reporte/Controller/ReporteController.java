@@ -1,34 +1,34 @@
 package com.dentify.reporte.Controller;
- 
+
 import java.util.Optional;
- 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
- 
+import org.springframework.web.bind.annotation.*;
 import com.dentify.reporte.DTO.ReporteDTO;
 import com.dentify.reporte.Service.ReporteService;
- 
+
 @RestController
 @RequestMapping("/api/reporte")
 public class ReporteController {
- 
+
     @Autowired
     private ReporteService reporteService;
 
-      @PostMapping("/generar-reporte")
+    @PostMapping("/generar-reporte")
     public ResponseEntity<String> generarReporte(@RequestBody ReporteDTO reporte) {
-        Boolean reportegenerado = reporteService.generarReporte(reporte);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Reporte generado correctamente.");
+        Boolean reporteGenerado = reporteService.generarReporte(reporte);
+        
+        // ¡Aquí está la corrección! Ahora evaluamos si realmente se guardó.
+        if (reporteGenerado) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Reporte generado correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al generar el reporte. Revisa la consola para más detalles.");
+        }
     }
 
-      @GetMapping("/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> buscarPorId(@PathVariable Integer id) {
         Optional<ReporteDTO> reporte = reporteService.buscarPorId(id);
         if (reporte.isEmpty()) {
