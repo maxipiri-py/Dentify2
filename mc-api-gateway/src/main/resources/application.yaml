@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: mc-api-gateway
+server:
+  port: 8080
+
+Spring:
+  application:
+    name: mc-api-gateway
+
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: "mc-saludo"
+            uri: "http://localhost:8081"
+            predicates:
+              - Path=/api/v1/saludo
+              - Path=/api/v1/saludo/**
