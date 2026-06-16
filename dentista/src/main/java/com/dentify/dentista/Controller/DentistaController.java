@@ -13,7 +13,7 @@ import com.dentify.dentista.Model.Dentista;
 import com.dentify.dentista.Service.DentistaService;
 
 @RestController
-@RequestMapping("/api/dentistas")
+@RequestMapping("/api/dentista")
 public class DentistaController {
 
     @Autowired

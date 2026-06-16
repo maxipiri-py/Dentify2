@@ -4,7 +4,7 @@ spring:
 server:
   port: 8090
 
-Spring:
+spring:
   application:
     name: mc-api-gateway
 
@@ -20,7 +20,7 @@ Spring:
           - id: "mc-dentista"
             uri: "http://localhost:8082"
             predicates:
-              - Path=/api/v1/dentistas/**
+              - Path=/api/dentistas/**
 
           - id: "mc-login"
             uri: "http://localhost:8080"
@@ -61,8 +61,8 @@ Spring:
           - id: "mc-presupuesto"
             uri: "http://localhost:8089"
             predicates:
-              - Path=/api/v1/presupuesto
-              - Path=/api/v1/presupuesto/**
+              - Path=/api/presupuesto
+              - Path=/api/presupuesto/**
               
           - id: "mc-reporte"
             uri: "http://localhost:8087"
