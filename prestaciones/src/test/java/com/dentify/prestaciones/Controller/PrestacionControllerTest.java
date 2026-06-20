@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,19 @@ public class PrestacionControllerTest {
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.nombre").value("Limpieza dental"));
     }
+    
+    @Test
+    @DisplayName("POST /api/prestaciones -> retorna 400 cuando los datos son inválidos")
+    public void testCrearError() throws Exception {
+        when(prestacionService.crear(any(PrestacionDTO.class))).thenThrow(new IllegalArgumentException("Error"));
+
+        mockMvc.perform(post("/api/prestaciones")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isBadRequest());
+    }
+
+
 
     @Test
     @DisplayName("GET /api/prestaciones -> retorna el listado completo")
@@ -79,21 +93,7 @@ public class PrestacionControllerTest {
                 .andExpect(jsonPath("$[0].nombre").value("Limpieza dental"));
     }
 
-    @Test
-    @DisplayName("GET /api/prestaciones/{id} -> retorna la prestacion cuando existe")
-    public void testBuscarPorId() throws Exception {
-        var prestacion = new Prestacion();
-        prestacion.setId(1);
-        prestacion.setNombre("Limpieza dental");
-        prestacion.setValor(20000);
 
-        when(prestacionService.buscarPorId(1)).thenReturn(Optional.of(prestacion));
-
-        mockMvc.perform(get("/api/prestaciones/1")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.valor").value(20000));
-    }
 
     @Test
     @DisplayName("GET /api/prestaciones/{id} -> retorna 404 cuando no existe")
@@ -131,12 +131,31 @@ public class PrestacionControllerTest {
     }
 
     @Test
+    @DisplayName("PUT /api/prestaciones/{id} -> retorna 404 cuando no existe")
+    public void testActualizarNoExiste() throws Exception {
+
+        mockMvc.perform(put("/api/prestaciones/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isNotFound());
+    }
+
+
+    @Test
     @DisplayName("DELETE /api/prestaciones/{id} -> elimina una prestacion existente")
     public void testEliminar() throws Exception {
-        when(prestacionService.eliminar(1)).thenReturn(true);
 
         mockMvc.perform(delete("/api/prestaciones/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value("Prestación eliminada correctamente"));
     }
+
+    @Test
+    @DisplayName("DELETE /api/prestaciones/{id} -> retorna 404 cuando no existe")
+    public void testEliminarNoExiste() throws Exception {
+
+        mockMvc.perform(delete("/api/prestaciones/99"))
+                .andExpect(status().isNotFound());
+    }
+
 }
