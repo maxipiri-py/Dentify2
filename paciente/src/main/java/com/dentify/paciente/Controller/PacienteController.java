@@ -21,12 +21,12 @@ public class PacienteController {
 
     // LISTAR TODOS
     @GetMapping
-    public ResponseEntity<List<PacienteModel>> buscarTodos(){
+    public ResponseEntity<List<PacienteModel>> buscarTodos() {
 
         List<PacienteModel> listaPacientes =
                 pacienteService.buscarTodos();
 
-        if(listaPacientes.isEmpty()){
+        if (listaPacientes.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
@@ -35,24 +35,38 @@ public class PacienteController {
 
     // CREAR
     @PostMapping
-    public ResponseEntity<PacienteModel> crear(
-            @RequestBody PacienteDTO paciente){
+    public ResponseEntity<?> crear(
+            @RequestBody PacienteDTO pacienteDTO) {
 
-        return ResponseEntity.ok(
-                pacienteService.crear(paciente)
-        );
+        try {
+            PacienteModel pacienteCreado =
+                    pacienteService.crear(pacienteDTO);
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body(pacienteCreado);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
     }
 
     // BUSCAR POR ID
     @GetMapping("/{id}")
     public ResponseEntity<?> buscarPaciente(
-            @PathVariable Integer id){
+            @PathVariable Integer id) {
 
         Optional<PacienteModel> paciente =
                 pacienteService.buscarPorId(id);
 
-        if(paciente.isEmpty()){
-            return ResponseEntity.notFound().build();
+        if (paciente.isEmpty()) {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("No existe el paciente con ID: " + id);
         }
 
         return ResponseEntity.ok(paciente.get());
@@ -62,32 +76,46 @@ public class PacienteController {
     @PutMapping("/{id}")
     public ResponseEntity<?> actualizarPaciente(
             @PathVariable Integer id,
-            @RequestBody PacienteDTO dto){
+            @RequestBody PacienteDTO dto) {
 
-        Optional<PacienteModel> paciente =
-                pacienteService.actualizar(id, dto);
+        try {
 
-        if(paciente.isEmpty()){
-            return ResponseEntity.notFound().build();
+            Optional<PacienteModel> paciente =
+                    pacienteService.actualizar(id, dto);
+
+            if (paciente.isEmpty()) {
+
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("No existe el paciente con ID: " + id);
+            }
+
+            return ResponseEntity.ok(paciente.get());
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         }
-
-        return ResponseEntity.ok(paciente.get());
     }
 
     // ELIMINAR
     @DeleteMapping("/{id}")
     public ResponseEntity<?> eliminarPaciente(
-            @PathVariable Integer id){
+            @PathVariable Integer id) {
 
         boolean eliminado =
                 pacienteService.eliminar(id);
 
-        if(!eliminado){
-            return ResponseEntity.notFound().build();
+        if (!eliminado) {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("No existe el paciente con ID: " + id);
         }
 
         return ResponseEntity.ok(
-                "Paciente eliminado correctamente"
-        );
+                "Paciente eliminado correctamente");
     }
 }
