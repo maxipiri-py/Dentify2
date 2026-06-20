@@ -1,10 +1,12 @@
 package com.dentify.observaciones.Controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,7 +60,7 @@ public class ObservacionControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/observaciones -> retorna 503 cuando falla la comunicacion con agenda")
+    @DisplayName("POST /api/observaciones -> retorna 403 cuando falla la comunicacion con agenda")
     public void testCrearServicioNoDisponible() throws Exception {
         when(observacionService.crear(any(ObservacionDTO.class)))
                 .thenThrow(new RuntimeException("agenda no responde"));
@@ -127,4 +129,49 @@ public class ObservacionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value("Observación eliminada correctamente"));
     }
+@Test
+    @DisplayName("PUT /api/observaciones/{id} -> actualiza una observacion existente")
+    public void testActualizar() throws Exception {
+        var observacion = new Observacion();
+        observacion.setId(1);
+        observacion.setDescripcion("Actualizada");
+
+        when(observacionService.actualizar(anyInt(), any(ObservacionDTO.class)))
+                .thenReturn(Optional.of(observacion));
+
+        String json = """
+                {
+                    "agendaId": 5,
+                    "descripcion": "Actualizada"
+                }
+                """;
+
+        mockMvc.perform(put("/api/observaciones/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.descripcion").value("Actualizada"));
+    }
+
+    @Test
+    @DisplayName("PUT /api/observaciones/{id} -> retorna 404 cuando no existe")
+    public void testActualizarNoExiste() throws Exception {
+        when(observacionService.actualizar(anyInt(), any(ObservacionDTO.class)))
+                .thenReturn(Optional.empty());
+
+        String json = """
+                {
+                    "agendaId": 5,
+                    "descripcion": "No importa"
+                }
+                """;
+
+        mockMvc.perform(put("/api/observaciones/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("No existe la observación con ID: 99"));
+    }
+
 }
