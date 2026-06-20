@@ -1,6 +1,7 @@
 package com.dentify.paciente.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,28 +47,84 @@ public class PacienteService {
         validarRut(dto.getRut());
     }
 
-    public List<PacienteModel> buscarTodos() {
+    // LISTAR TODOS
+    public List<PacienteModel> buscarTodos(){
         return pacienteRepository.findAll();
     }
 
-    public PacienteModel crear(PacienteDTO pacienteDTO) {
-        validarCamposObligatorios(pacienteDTO);
+    // CREAR
+    public PacienteModel crear(PacienteDTO pacienteDTO){
 
         PacienteModel paciente = new PacienteModel();
-        paciente.setApellido(pacienteDTO.getApellido().trim());
-        paciente.setNombre(pacienteDTO.getNombre().trim());
-        paciente.setRut(pacienteDTO.getRut().trim());
-        paciente.setFechaNacimiento(pacienteDTO.getFechaNacimiento());
+
+        paciente.setApellido(pacienteDTO.getApellido());
+        paciente.setNombre(pacienteDTO.getNombre());
+        paciente.setRut(pacienteDTO.getRut());
+        paciente.setFechaNacimiento(
+                pacienteDTO.getFechaNacimiento());
         paciente.setCorreo(pacienteDTO.getCorreo());
 
         return pacienteRepository.save(paciente);
     }
 
-    public PacienteModel obtenerHistorialCompleto(Integer id) {
-        return pacienteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Paciente no encontrado con ID: " + id));
+    // BUSCAR POR ID
+    public Optional<PacienteModel> buscarPorId(Integer id){
+
+        return pacienteRepository.findById(id);
     }
 
+    // HISTORIAL COMPLETO
+    public PacienteModel obtenerHistorialCompleto(Integer id) {
+
+        return pacienteRepository.findById(id)
+            .orElseThrow(() ->
+                new RuntimeException("Paciente no encontrado"));
+    }
+
+    // ACTUALIZAR
+    public Optional<PacienteModel> actualizar(
+            Integer id,
+            PacienteDTO dto){
+
+        Optional<PacienteModel> pacienteOptional =
+                pacienteRepository.findById(id);
+
+        if(pacienteOptional.isEmpty()){
+            return Optional.empty();
+        }
+
+        PacienteModel paciente =
+                pacienteOptional.get();
+
+        paciente.setNombre(dto.getNombre());
+        paciente.setApellido(dto.getApellido());
+        paciente.setRut(dto.getRut());
+        paciente.setFechaNacimiento(
+                dto.getFechaNacimiento());
+        paciente.setCorreo(dto.getCorreo());
+
+        PacienteModel pacienteActualizado =
+                pacienteRepository.save(paciente);
+
+        return Optional.of(pacienteActualizado);
+    }
+
+    // ELIMINAR
+    public boolean eliminar(Integer id){
+
+        Optional<PacienteModel> paciente =
+                pacienteRepository.findById(id);
+
+        if(paciente.isEmpty()){
+            return false;
+        }
+
+        pacienteRepository.deleteById(id);
+
+        return true;
+    }
+
+    // LISTAR TODOS
     public List<PacienteModel> listarTodos() {
         return pacienteRepository.findAll();
     }
