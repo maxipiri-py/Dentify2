@@ -1,8 +1,11 @@
 package com.dentify.agenda.Controller;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -79,7 +82,6 @@ public class AgendaControllerTest {
         agenda.setNombre("Maximiliano");
         agenda.setFechaHora("2026-06-20 10:00");
 
-        when(agendaService.buscarTodos()).thenReturn(List.of(agenda));
 
         mockMvc.perform(get("/api/agenda/listar")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -95,7 +97,6 @@ public class AgendaControllerTest {
         agenda.setNombre("Maximiliano");
         agenda.setEspecialidad("Ortodoncia");
 
-        when(agendaService.buscarPorId(1)).thenReturn(Optional.of(agenda));
 
         mockMvc.perform(get("/api/agenda/1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -106,11 +107,53 @@ public class AgendaControllerTest {
     @Test
     @DisplayName("GET /api/agenda/{id} -> retorna 404 cuando no existe")
     public void testBuscarPorIdNoExiste() throws Exception {
-        when(agendaService.buscarPorId(99)).thenReturn(Optional.empty());
 
         mockMvc.perform(get("/api/agenda/99")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$").value("No existe la agenda con ID: 99"));
+    }
+ 
+    @Test
+    @DisplayName("PUT /api/agenda/{id} -> retorna 200 cuando se actualiza correctamente")
+    public void testActualizarAgenda() throws Exception {
+        var agenda = new AgendaDTO();
+        agenda.setNombre("Maximiliano Actualizado");
+        when(agendaService.actualizar(anyInt(), any(AgendaDTO.class))).thenReturn(Optional.of(agenda));
+
+        mockMvc.perform(put("/api/agenda/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.nombre").value("Maximiliano Actualizado"));
+    }
+
+    @Test
+    @DisplayName("PUT /api/agenda/{id} -> retorna 404 cuando no existe")
+    public void testActualizarAgendaNoExiste() throws Exception {
+        when(agendaService.actualizar(anyInt(), any(AgendaDTO.class))).thenReturn(Optional.empty());
+
+        mockMvc.perform(put("/api/agenda/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{}"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/agenda/{id} -> retorna 200 cuando se elimina")
+    public void testEliminarAgenda() throws Exception {
+        when(agendaService.eliminar(1)).thenReturn(true);
+
+        mockMvc.perform(delete("/api/agenda/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("DELETE /api/agenda/{id} -> retorna 404 cuando no existe")
+    public void testEliminarAgendaNoExiste() throws Exception {
+        when(agendaService.eliminar(99)).thenReturn(false);
+
+        mockMvc.perform(delete("/api/agenda/99"))
+                .andExpect(status().isNotFound());
     }
 }

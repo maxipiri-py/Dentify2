@@ -178,4 +178,14 @@ public class AgendaService {
         dto.setFechaHora(model.getFechaHora());
         return dto;
     }
+
+    public Object actualizar(int anyInt, AgendaDTO any) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'actualizar'");
+    }
+
+    public Object eliminar(int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'eliminar'");
+    }
 }
