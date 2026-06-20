@@ -1,6 +1,29 @@
-package com.dentify.Controller;
+package com.dentify.dentista.Controller;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.Optional;
+import java.util.List;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
+
+import com.dentify.dentista.Model.Dentista;
+
+
+import com.dentify.dentista.DTO.DentistaDTO;
+import com.dentify.dentista.Service.DentistaService;
 
 @SpringBootTest
 public class DentistaControllerTest {
@@ -14,7 +37,7 @@ public class DentistaControllerTest {
     @DisplayName("GET /api/dentista/{id} -> Retorna 200 y JSON si el ID existe")
 
     public void testBuscarDentista() throws Exception {
-// aqui va lo mismo del dTO 
+    // aqui va lo mismo del dTO 
 
         var tipoFalso = new Dentista();
         tipoFalso.setId(1);
@@ -37,6 +60,14 @@ public class DentistaControllerTest {
                 .andExpect(jsonPath("$.especialidad").value("Ortodoncia"))
                 .andExpect(jsonPath("$.correo").value("maxipiri@gmail.com"))
                 .andExpect(jsonPath("$.telefono").value("123456789"));
+    }
+    private Object print() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'print'");
+    }
+    private Object status() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'status'");
     }
     @Test
     @DisplayName("Get /api/dentista/{id} -> Retorna 404 y mensaje si el ID no existe")
@@ -64,7 +95,7 @@ public class DentistaControllerTest {
     "nombre": "Dr. Matias Sandoval",
     "apellido": "Sandoval",
     "rut": "33336666-9",
-    "especialidad": "Urulogo",
+    "especialidad": "Implantologia",
     "correo": "matiassandoval@gmail.com",
     "telefono": "123456788"
 }

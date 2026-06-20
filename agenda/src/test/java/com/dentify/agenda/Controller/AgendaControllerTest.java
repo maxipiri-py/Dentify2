@@ -1,5 +1,4 @@
 package com.dentify.agenda.Controller;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -7,17 +6,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
 import java.util.Optional;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.MediaType;
 
 import com.dentify.agenda.DTO.AgendaDTO;
 import com.dentify.agenda.Service.AgendaService;
@@ -33,8 +31,7 @@ public class AgendaControllerTest {
 
     @Test
     @DisplayName("POST /api/agenda/crear-agenda -> retorna 201 cuando se crea correctamente")
-    public void testCrearAgenda() throws Exception {
-        when(agendaService.guardarAgenda(any(AgendaDTO.class))).thenReturn(true);
+    public void testCrearAgenda() throws Exception {        when(agendaService.guardarAgenda(any(AgendaDTO.class))).thenReturn(true);
 
         String json = """
                 {
@@ -58,7 +55,7 @@ public class AgendaControllerTest {
     @Test
     @DisplayName("POST /api/agenda/crear-agenda -> retorna 500 cuando falla el guardado")
     public void testCrearAgendaFalla() throws Exception {
-        when(agendaService.guardarAgenda(any(AgendaDTO.class))).thenReturn(false);
+        
 
         String json = """
                 {
