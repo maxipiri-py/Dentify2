@@ -15,7 +15,6 @@ import com.dentify.prestaciones.Service.PrestacionService;
 @RestController
 @RequestMapping("/api/prestaciones")
 public class PrestacionController {
-
     @Autowired
     private PrestacionService prestacionService;
 
