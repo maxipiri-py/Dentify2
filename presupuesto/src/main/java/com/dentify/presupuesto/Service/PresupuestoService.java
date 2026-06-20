@@ -155,4 +155,26 @@ public class PresupuestoService {
             return false;
         }
     }
+
+    public Object eliminar(int i) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'eliminar'");
+    }
+
+    public boolean eliminar(Integer id) {
+    if (presupuestoRepository.existsById(id)) {
+        presupuestoRepository.deleteById(id);
+        return true;
+    }
+    return false;
+    }
+
+    public Optional<PresupuestoModel> actualizar(Integer id, PresupuestoModel presupuesto) {
+        if (presupuestoRepository.existsById(id)) {
+            presupuesto.setId(id);
+            return Optional.of(presupuestoRepository.save(presupuesto));
+        }
+        return Optional.empty();
+    }
+
 }

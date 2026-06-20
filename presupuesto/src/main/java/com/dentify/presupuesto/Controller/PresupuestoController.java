@@ -42,8 +42,24 @@ public class PresupuestoController {
         return ResponseEntity.ok(presupuesto.get());
     }
 
-    @GetMapping("/estado")
-    public ResponseEntity<List<PresupuestoModel>> buscarPorEstado(@RequestParam String estado) {
-        return ResponseEntity.ok(presupuestoService.buscarPorEstado(estado));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarPresupuesto(@PathVariable Integer id) {
+        boolean eliminado = presupuestoService.eliminar(id);
+        if (!eliminado) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No existe el presupuesto con ID: " + id);
+        }
+        return ResponseEntity.ok("Presupuesto eliminado correctamente");
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Integer id, @RequestBody PresupuestoModel presupuesto) {
+        Optional<PresupuestoModel> actualizado = presupuestoService.actualizar(id, presupuesto);
+        if (actualizado.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No existe el presupuesto con ID: " + id);
+        }
+        return ResponseEntity.ok(actualizado.get());
     }
 }

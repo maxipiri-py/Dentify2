@@ -1,26 +1,32 @@
 package com.dentify.presupuesto.Controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 
-import com.dentify.presupuesto.Model.PresupuestoModel;
 import com.dentify.presupuesto.Service.PresupuestoService;
+import com.dentify.presupuesto.Model.PresupuestoModel;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @WebMvcTest(PresupuestoController.class)
 public class PresupuestoControllerTest {
@@ -107,18 +113,66 @@ public class PresupuestoControllerTest {
     }
 
     @Test
-    @DisplayName("GET /api/presupuesto/estado -> retorna los presupuestos filtrados por estado")
-    public void testBuscarPorEstado() throws Exception {
+    @DisplayName("DELETE /api/presupuesto/{id} -> elimina un presupuesto existente")
+    public void testEliminarPresupuesto() throws Exception {
+        when(presupuestoService.eliminar(1)).thenReturn(true);
+
+        mockMvc.perform(delete("/api/presupuesto/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Presupuesto eliminado correctamente"));
+    }
+
+    private RequestBuilder delete(String string) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    }
+
+    @Test
+    @DisplayName("DELETE /api/presupuesto/{id} -> retorna 404 cuando no existe")
+    public void testEliminarPresupuestoNoExiste() throws Exception {
+        when(presupuestoService.eliminar(99)).thenReturn(false);
+
+        mockMvc.perform(delete("/api/presupuesto/99"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$").value("No existe el presupuesto con ID: 99"));
+    }
+
+    @Test
+    @DisplayName("PUT /api/presupuesto/{id} -> actualiza un presupuesto existente")
+    public void testActualizarPresupuesto() throws Exception {
         var presupuesto = new PresupuestoModel();
         presupuesto.setId(1);
-        presupuesto.setEstadoPago("PAGADO");
+        presupuesto.setNombrePaciente("Maximiliano Caceres");        
+        when(presupuestoService.actualizar(anyInt(), any(PresupuestoModel.class)))
+                .thenReturn(Optional.of(presupuesto));
 
-        when(presupuestoService.buscarPorEstado("PAGADO")).thenReturn(List.of(presupuesto));
+        String json = """
+                {
+                    "nombrePaciente": "Maximiliano Caceres"
+                }
+                """;
 
-        mockMvc.perform(get("/api/presupuesto/estado")
-                .param("estado", "PAGADO")
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/api/presupuesto/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].estadoPago").value("PAGADO"));
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.nombrePaciente").value("Maximiliano Caceres"));
     }
+
+    @Test
+    @DisplayName("PUT /api/presupuesto/{id} -> retorna 404 cuando no existe")
+    public void testActualizarPresupuestoNoExiste() throws Exception {
+        when(presupuestoService.actualizar(anyInt(), any(PresupuestoModel.class)))
+                .thenReturn(Optional.empty());
+
+        String json = "{}";
+
+        mockMvc.perform(put("/api/presupuesto/99")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("No existe el presupuesto con ID: 99"));
+    }
+
 }
