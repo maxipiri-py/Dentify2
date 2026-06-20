@@ -22,22 +22,83 @@ public class PagoController {
     public ResponseEntity<String> registrarPago(@RequestBody PagoDTO pago) {
         try {
             pagoService.registrarPago(pago);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Pago registrado correctamente.");
+
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .body("Pago registrado correctamente.");
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error: No se pudo registrar el pago en la base de datos.");
         }
     }
 
     @GetMapping("/lista-pagos")
     public ResponseEntity<List<PagoModel>> listarTodos() {
-        return ResponseEntity.ok(pagoService.buscarTodos());
+
+        return ResponseEntity.ok(
+                pagoService.buscarTodos());
     }
 
     @GetMapping("/estado-pago")
-    public ResponseEntity<List<PagoModel>> buscarPorEstado(@RequestParam String estado) {
-        return ResponseEntity.ok(pagoService.buscarPorEstado(estado));
+    public ResponseEntity<List<PagoModel>> buscarPorEstado(
+            @RequestParam String estado) {
+
+        return ResponseEntity.ok(
+                pagoService.buscarPorEstado(estado));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarPago(
+            @PathVariable Integer id,
+            @RequestBody PagoDTO pagoDTO) {
+
+        try {
+
+            var pagoActualizado =
+                    pagoService.actualizarPago(id, pagoDTO);
+
+            if (pagoActualizado.isEmpty()) {
+
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body("No existe el pago con ID: " + id);
+            }
+
+            return ResponseEntity.ok(
+                    pagoActualizado.get());
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarPago(
+            @PathVariable Integer id) {
+
+        boolean eliminado =
+                pagoService.eliminarPago(id);
+
+        if (!eliminado) {
+
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("No existe el pago con ID: " + id);
+        }
+
+        return ResponseEntity.ok(
+                "Pago eliminado correctamente");
     }
 }

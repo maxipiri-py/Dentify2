@@ -44,8 +44,26 @@ public class PagoService {
     }
 
     private void validarMontos(PagoDTO pago) {
-        if (pago.getMontoPagado() == null || pago.getMontoPagado() <= 0) {
-            throw new IllegalArgumentException("El monto pagado debe ser mayor a 0.");
+
+        if (pago.getMontoTotal() == null
+                || pago.getMontoTotal() <= 0) {
+
+            throw new IllegalArgumentException(
+                    "El monto total debe ser mayor a 0.");
+        }
+
+        if (pago.getMontoPagado() == null
+                || pago.getMontoPagado() <= 0) {
+
+            throw new IllegalArgumentException(
+                    "El monto pagado debe ser mayor a 0.");
+        }
+
+        if (pago.getMontoPagado()
+                > pago.getMontoTotal()) {
+
+            throw new IllegalArgumentException(
+                    "El monto pagado no puede ser mayor al total.");
         }
     }
 
@@ -134,4 +152,78 @@ public class PagoService {
         pagoRepository.save(pagoModel);
         return true;
     }
+
+    public Optional<PagoModel> actualizarPago(
+        Integer id,
+        PagoDTO pagoDTO) {
+
+    Optional<PagoModel> pagoOptional =
+            pagoRepository.findById(id);
+
+    if (pagoOptional.isEmpty()) {
+        return Optional.empty();
+    }
+
+    verificarPresupuestoExiste(
+            pagoDTO.getPresupuestoId());
+
+    if (pagoDTO.getPacienteId() == null) {
+
+        throw new IllegalArgumentException(
+                "El pago debe estar asociado a un paciente.");
+    }
+
+    validarRut(
+            pagoDTO.getRutPaciente());
+
+    validarMontos(
+            pagoDTO);
+
+    PagoModel pago =
+            pagoOptional.get();
+
+    pago.setPacienteId(
+            pagoDTO.getPacienteId());
+
+    pago.setNombrePaciente(
+            pagoDTO.getNombrePaciente());
+
+    pago.setRutPaciente(
+            pagoDTO.getRutPaciente().trim());
+
+    pago.setPresupuestoId(
+            pagoDTO.getPresupuestoId());
+
+    pago.setMontoPagado(
+            pagoDTO.getMontoPagado());
+
+    pago.setMontoTotal(
+            pagoDTO.getMontoTotal());
+
+    pago.setFechaPago(
+            pagoDTO.getFechaPago());
+
+    pago.setMetodoPago(
+            pagoDTO.getMetodoPago());
+
+    pago.setEstadoPago(
+            pagoDTO.getEstadoPago());
+
+    return Optional.of(
+            pagoRepository.save(pago));
+    }
+
+    public boolean eliminarPago(Integer id) {
+
+        Optional<PagoModel> pago =
+                pagoRepository.findById(id);
+
+        if (pago.isEmpty()) {
+            return false;
+        }
+
+        pagoRepository.deleteById(id);
+
+        return true;
+}
 }
