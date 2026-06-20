@@ -1,31 +1,6 @@
-package com.dentify.dentista.Controller;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
-import org.junit.jupiter.api.DisplayName;
+package com.dentify.Controller;
 import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.when;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.dentify.dentista.DTO.DentistaDTO;
-import com.dentify.dentista.Model.Dentista;
-import com.dentify.dentista.Service.DentistaService;
 
 @SpringBootTest
 @org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
@@ -44,6 +19,7 @@ public class DentistaControllerTest {
     @Test
     @DisplayName("GET /api/dentista/{id} -> Retorna 200 y JSON si el ID existe")
     public void testBuscarDentista() throws Exception {
+// aqui va lo mismo del dTO 
 
         Dentista dentista = new Dentista();
         dentista.setId(1);
@@ -69,11 +45,6 @@ public class DentistaControllerTest {
                 .andExpect(jsonPath("$.correo").value("maxipiri@gmail.com"))
                 .andExpect(jsonPath("$.telefono").value("123456789"));
     }
-
-    // =====================================================
-    // GET BY ID - NOT FOUND
-    // =====================================================
-
     @Test
     @DisplayName("GET /api/dentista/{id} -> Retorna 404 cuando no existe")
     public void buscarPorId_cuandoNoExiste_deberiaRetornar404YMensaje() throws Exception {
@@ -110,13 +81,13 @@ public class DentistaControllerTest {
 
         String jsonRequestBody = """
         {
-            "nombre":"Dr. Matias Sandoval",
-            "apellido":"Sandoval",
-            "rut":"33336666-9",
-            "especialidad":"Urologo",
-            "correo":"matiassandoval@gmail.com",
-            "telefono":"123456788"
-        }
+    "nombre": "Dr. Matias Sandoval",
+    "apellido": "Sandoval",
+    "rut": "33336666-9",
+    "especialidad": "Urulogo",
+    "correo": "matiassandoval@gmail.com",
+    "telefono": "123456788"
+}
         """;
 
         mockMvc.perform(post("/api/dentista")
