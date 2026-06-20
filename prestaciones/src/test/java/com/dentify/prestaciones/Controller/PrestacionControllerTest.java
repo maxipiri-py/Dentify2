@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,7 +114,7 @@ public class PrestacionControllerTest {
         prestacion.setNombre("Limpieza dental premium");
         prestacion.setValor(25000);
 
-        when(prestacionService.actualizar(1, any(PrestacionDTO.class))).thenReturn(Optional.of(prestacion));
+        when(prestacionService.actualizar(eq(1), any(PrestacionDTO.class))).thenReturn(Optional.of(prestacion));
 
         String json = """
                 {
@@ -144,6 +144,7 @@ public class PrestacionControllerTest {
     @Test
     @DisplayName("DELETE /api/prestaciones/{id} -> elimina una prestacion existente")
     public void testEliminar() throws Exception {
+        when(prestacionService.eliminar(1)).thenReturn(true);
 
         mockMvc.perform(delete("/api/prestaciones/1"))
                 .andExpect(status().isOk())
