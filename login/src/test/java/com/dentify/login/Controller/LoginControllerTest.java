@@ -119,6 +119,18 @@ public class LoginControllerTest {
     }
 
     @Test
+    @DisplayName("GET /api/login/usuarios -> retorna lista vacía")
+    public void testListarUsuariosVacio() throws Exception {
+        when(loginService.listarTodos()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/login/usuarios")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+
+    @Test
     @DisplayName("DELETE /api/login/usuarios/{id} -> elimina un usuario existente")
     public void testEliminarUsuario() throws Exception {
         when(loginService.eliminar(1)).thenReturn(true);
