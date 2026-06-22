@@ -85,7 +85,7 @@ public class PresupuestoService {
                 "Regla de negocio: el presupuesto debe tener un dentista. Indique el dentistaId.");
         }
         Boolean existe = webClientDentista.get()
-            .uri("/dentistas/{id}", dentistaId)
+            .uri("/dentista/{id}", dentistaId)
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError,
                 resp -> Mono.error(new IllegalArgumentException("Dentista no encontrado")))

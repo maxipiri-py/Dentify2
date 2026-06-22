@@ -91,7 +91,7 @@ public class AgendaService {
                 "Regla de negocio: la hora debe estar asociada a un dentista. Indique el dentistaId.");
         }
         Boolean existe = webClientDentista.get()
-            .uri("/dentistas/{id}", dentistaId)
+            .uri("/dentista/{id}", dentistaId)
             .retrieve()
             .onStatus(HttpStatusCode::is4xxClientError,
                 resp -> Mono.error(new IllegalArgumentException(
