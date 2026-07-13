@@ -179,13 +179,37 @@ public class AgendaService {
         return dto;
     }
 
-    public Object actualizar(int anyInt, AgendaDTO any) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'actualizar'");
+    public Optional<AgendaDTO> actualizar(int id, AgendaDTO agenda) {
+        return agendaRepository.findById(id).map(existing -> {
+            if (agenda.getPacienteId() != null) {
+                verificarPacienteExiste(agenda.getPacienteId());
+                existing.setPacienteId(agenda.getPacienteId());
+            }
+            if (agenda.getDentistaId() != null) {
+                verificarDentistaExiste(agenda.getDentistaId());
+                existing.setDentistaId(agenda.getDentistaId());
+            }
+            if (agenda.getRut() != null && !agenda.getRut().isBlank()) {
+                validarRut(agenda.getRut());
+                existing.setRut(agenda.getRut().trim());
+            }
+            if (agenda.getNombre() != null) existing.setNombre(agenda.getNombre().trim());
+            if (agenda.getApellido() != null) existing.setApellido(agenda.getApellido().trim());
+            if (agenda.getEspecialidad() != null) existing.setEspecialidad(agenda.getEspecialidad());
+            if (agenda.getTelefono() != null) existing.setTelefono(agenda.getTelefono());
+            if (agenda.getEmail() != null) existing.setEmail(agenda.getEmail());
+            if (agenda.getFechaHora() != null) existing.setFechaHora(agenda.getFechaHora());
+
+            agendaRepository.save(existing);
+            return convertToDTO(existing);
+        });
     }
 
-    public Object eliminar(int i) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'eliminar'");
+    public boolean eliminar(int id) {
+        if (!agendaRepository.existsById(id)) {
+            return false;
+        }
+        agendaRepository.deleteById(id);
+        return true;
     }
 }

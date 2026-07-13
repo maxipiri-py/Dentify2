@@ -47,4 +47,27 @@ public class AgendaController {
         }
         return ResponseEntity.ok(agenda.get());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizarAgenda(@PathVariable int id, @RequestBody AgendaDTO agenda) {
+        try {
+            Optional<AgendaDTO> actualizada = agendaService.actualizar(id, agenda);
+            if (actualizada.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No existe la agenda con ID: " + id);
+            }
+            return ResponseEntity.ok(actualizada.get());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarAgenda(@PathVariable int id) {
+        boolean eliminado = agendaService.eliminar(id);
+        if (!eliminado) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok().build();
+    }
 }
