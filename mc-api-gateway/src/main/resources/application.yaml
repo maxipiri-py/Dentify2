@@ -25,47 +25,39 @@ spring:
           - id: "mc-login"
             uri: "http://localhost:8080"
             predicates:
-              - Path=/api/login
               - Path=/api/login/**
 
           - id: "mc-notificaciones"
             uri: "http://localhost:8085"
             predicates:
-              - Path=/api/notificaciones
               - Path=/api/notificaciones/**
 
           - id: "mc-observaciones"
             uri: "http://localhost:8084"
             predicates:
-              - Path=/api/observaciones
               - Path=/api/observaciones/**
 
           - id: "mc-paciente"
             uri: "http://localhost:8081"
             predicates:
-              - Path=/api/paciente
               - Path=/api/paciente/**
 
           - id: "mc-pagos"
             uri: "http://localhost:8088"
             predicates:
-              - Path=/api/pagos
               - Path=/api/pagos/**
 
           - id: "mc-prestaciones"
             uri: "http://localhost:8086"
             predicates:
-              - Path=/api/prestaciones
               - Path=/api/prestaciones/**
 
           - id: "mc-presupuesto"
             uri: "http://localhost:8089"
             predicates:
-              - Path=/api/presupuesto
               - Path=/api/presupuesto/**
               
           - id: "mc-reporte"
             uri: "http://localhost:8087"
             predicates:
-              - Path=/api/reporte
               - Path=/api/reporte/**
