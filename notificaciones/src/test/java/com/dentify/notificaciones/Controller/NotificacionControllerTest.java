@@ -1,4 +1,5 @@
 package com.dentify.notificaciones.Controller;
+
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.dentify.notificaciones.  DTO.NotificacionDTO;
+import com.dentify.notificaciones.DTO.NotificacionDTO;
 import com.dentify.notificaciones.Model.Notificacion;
 import com.dentify.notificaciones.Service.NotificacionService;
 
@@ -22,8 +23,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-@WebMvcTest(NotificacionController.class)
 
+@WebMvcTest(NotificacionController.class)
 public class NotificacionControllerTest {
 
     @Autowired
@@ -68,8 +69,7 @@ public class NotificacionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
                 .andExpect(status().isInternalServerError());
-    }   
-
+    }
 
     @Test
     @DisplayName("GET /api/notificaciones -> retorna el listado completo")
