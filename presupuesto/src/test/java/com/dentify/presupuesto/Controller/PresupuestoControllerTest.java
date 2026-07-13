@@ -14,11 +14,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.RequestBuilder;
 
 import com.dentify.presupuesto.Service.PresupuestoService;
 import com.dentify.presupuesto.Model.PresupuestoModel;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -109,32 +109,29 @@ public class PresupuestoControllerTest {
         mockMvc.perform(get("/api/presupuesto/99")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$").value("No existe el presupuesto con ID: 99"));
+                .andExpect(content().string("No existe el presupuesto con ID: 99"));
     }
 
     @Test
     @DisplayName("DELETE /api/presupuesto/{id} -> elimina un presupuesto existente")
     public void testEliminarPresupuesto() throws Exception {
-        when(presupuestoService.eliminar(1)).thenReturn(true);
+        Integer id = 1;
+        when(presupuestoService.eliminar(id)).thenReturn(true);
 
         mockMvc.perform(delete("/api/presupuesto/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Presupuesto eliminado correctamente"));
     }
 
-    private RequestBuilder delete(String string) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
     @Test
     @DisplayName("DELETE /api/presupuesto/{id} -> retorna 404 cuando no existe")
     public void testEliminarPresupuestoNoExiste() throws Exception {
-        when(presupuestoService.eliminar(99)).thenReturn(false);
+        Integer id = 99;
+        when(presupuestoService.eliminar(id)).thenReturn(false);
 
         mockMvc.perform(delete("/api/presupuesto/99"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$").value("No existe el presupuesto con ID: 99"));
+                .andExpect(content().string("No existe el presupuesto con ID: 99"));
     }
 
     @Test
@@ -142,7 +139,7 @@ public class PresupuestoControllerTest {
     public void testActualizarPresupuesto() throws Exception {
         var presupuesto = new PresupuestoModel();
         presupuesto.setId(1);
-        presupuesto.setNombrePaciente("Maximiliano Caceres");        
+        presupuesto.setNombrePaciente("Maximiliano Caceres");
         when(presupuestoService.actualizar(anyInt(), any(PresupuestoModel.class)))
                 .thenReturn(Optional.of(presupuesto));
 
