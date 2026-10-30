@@ -96,4 +96,12 @@ public class LoginController {
                 "Usuario eliminado correctamente"
         );
     }
+
+    // DATOS INVÁLIDOS (ej: contraseña vacía)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> manejarDatosInvalidos(
+            IllegalArgumentException e){
+
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

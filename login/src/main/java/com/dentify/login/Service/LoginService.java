@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dentify.login.DTO.LoginDTO;
@@ -17,6 +18,9 @@ public class LoginService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     // LOGIN
     public String login(LoginDTO dto){
 
@@ -24,8 +28,9 @@ public class LoginService {
                 usuarioRepository.findByUsername(dto.getUsername());
 
         if(usuario.isPresent()
-                && usuario.get().getPassword()
-                .equals(dto.getPassword())){
+                && dto.getPassword() != null
+                && usuario.get().getPassword() != null
+                && passwordEncoder.matches(dto.getPassword(), usuario.get().getPassword())){
 
             return "Login correcto";
         }
@@ -36,10 +41,14 @@ public class LoginService {
     // CREAR USUARIO
     public Usuario crearUsuario(UsuarioDTO dto){
 
+        if(dto.getPassword() == null || dto.getPassword().isBlank()){
+            throw new IllegalArgumentException("La contraseña no puede estar vacía.");
+        }
+
         Usuario usuario = new Usuario();
 
         usuario.setUsername(dto.getUsername());
-        usuario.setPassword(dto.getPassword());
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setRol(dto.getRol());
 
         return usuarioRepository.save(usuario);
@@ -68,8 +77,12 @@ public class LoginService {
         Usuario usuario = usuarioOptional.get();
 
         usuario.setUsername(dto.getUsername());
-        usuario.setPassword(dto.getPassword());
         usuario.setRol(dto.getRol());
+
+        // Si no viene contraseña nueva se conserva el hash actual
+        if(dto.getPassword() != null && !dto.getPassword().isBlank()){
+            usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
 
         Usuario usuarioActualizado =
                 usuarioRepository.save(usuario);

@@ -58,6 +58,7 @@ public class LoginControllerTest {
         var usuario = new Usuario();
         usuario.setId(1);
         usuario.setUsername("maxi");
+        usuario.setPassword("$2a$10$hashDePrueba");
         usuario.setRol("ADMIN");
 
         when(loginService.crearUsuario(any(UsuarioDTO.class))).thenReturn(usuario);
@@ -75,7 +76,21 @@ public class LoginControllerTest {
                 .content(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username").value("maxi"))
-                .andExpect(jsonPath("$.rol").value("ADMIN"));
+                .andExpect(jsonPath("$.rol").value("ADMIN"))
+                .andExpect(jsonPath("$.password").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("POST /api/login/usuarios -> retorna 400 cuando la contraseña viene vacía")
+    public void testCrearUsuarioSinPassword() throws Exception {
+        when(loginService.crearUsuario(any(UsuarioDTO.class)))
+                .thenThrow(new IllegalArgumentException("La contraseña no puede estar vacía."));
+
+        mockMvc.perform(post("/api/login/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"maxi\", \"rol\": \"ADMIN\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("La contraseña no puede estar vacía."));
     }
 
     @Test
