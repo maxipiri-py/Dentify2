@@ -28,4 +28,16 @@ class McApiGatewayApplicationTests {
 				"mc-observaciones", "mc-paciente", "mc-pagos", "mc-prestaciones", "mc-presupuesto", "mc-reporte");
 	}
 
+	@Test
+	void rutaDentistaApuntaAlPathDelControlador() {
+		RouteProperties dentista = gatewayProperties.getRoutes().stream()
+				.filter(r -> r.getId().equals("mc-dentista"))
+				.findFirst()
+				.orElseThrow();
+
+		assertThat(dentista.getUri()).hasToString("http://localhost:8082");
+		assertThat(dentista.getPredicates()).singleElement()
+				.satisfies(p -> assertThat(p.getArgs().values()).containsExactly("/api/dentista/**"));
+	}
+
 }

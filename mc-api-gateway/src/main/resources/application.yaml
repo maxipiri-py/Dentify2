@@ -15,7 +15,7 @@ spring:
             - id: "mc-dentista"
               uri: "http://localhost:8082"
               predicates:
-                - Path=/api/dentistas/**
+                - Path=/api/dentista/**
 
             - id: "mc-login"
               uri: "http://localhost:8080"
