@@ -3,6 +3,8 @@ package com.dentify.presupuesto.Service;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
@@ -18,6 +20,8 @@ import reactor.core.publisher.Mono;
 @Service
 @Transactional
 public class PresupuestoService {
+
+    private static final Logger log = LoggerFactory.getLogger(PresupuestoService.class);
 
     @Autowired
     private PresupuestoRepository presupuestoRepository;
@@ -151,7 +155,7 @@ public class PresupuestoService {
             presupuestoRepository.save(presupuesto);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error al guardar el presupuesto", e);
             return false;
         }
     }

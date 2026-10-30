@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
@@ -20,6 +22,8 @@ import reactor.core.publisher.Mono;
 @Service
 @Transactional
 public class AgendaService {
+
+    private static final Logger log = LoggerFactory.getLogger(AgendaService.class);
 
     @Autowired
     private AgendaRepository agendaRepository;
@@ -142,7 +146,7 @@ public class AgendaService {
             agendaRepository.save(convertToModel(agenda));
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error al guardar la agenda", e);
             return false;
         }
     }

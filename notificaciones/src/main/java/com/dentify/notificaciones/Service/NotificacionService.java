@@ -2,6 +2,8 @@ package com.dentify.notificaciones.Service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import com.dentify.notificaciones.Repository.NotificacionRepository;
 
 @Service
 public class NotificacionService {
+
+    private static final Logger log = LoggerFactory.getLogger(NotificacionService.class);
 
     @Autowired
     private NotificacionRepository notificacionRepository;
@@ -26,8 +30,8 @@ public class NotificacionService {
         // SIMULACION
         notificacion.setEstado("ENVIADO");
 
-        System.out.println("Correo enviado a: " + dto.getCorreo());
-        System.out.println("Mensaje: " + dto.getMensaje());
+        log.info("Correo enviado a: {}", dto.getCorreo());
+        log.debug("Mensaje: {}", dto.getMensaje());
 
         return notificacionRepository.save(notificacion);
     }
