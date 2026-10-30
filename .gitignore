@@ -1,0 +1,8 @@
+# Respaldo comprimido del proyecto (no versionar binarios)
+DentifyEV3.zip
+
+# Base H2 local del microservicio pagos (se genera al ejecutar)
+pagos/data/
+*.mv.db
+*.lock.db
+*.trace.db
